@@ -1,0 +1,35 @@
+name: Build CYD CSI firmware
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build firmware
+        run: pio run
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: CYD-2432S028-CSI-firmware
+          path: |
+            .pio/build/cyd-2432s028/firmware.bin
+            .pio/build/cyd-2432s028/bootloader.bin
+            .pio/build/cyd-2432s028/partitions.bin
